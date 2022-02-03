@@ -15,6 +15,6 @@ class Students(models.Model):
     def gen_students(count):
         fake = Faker()
         for _ in range(count):
-            stud = Students(first_name = fake.first_name(),
-                            last_name = fake.last_name(), age = fake.pyint(15,75))
+            stud = Students(first_name=fake.first_name(),
+                            last_name=fake.last_name(), age=fake.pyint(15, 75))
             stud.save()
