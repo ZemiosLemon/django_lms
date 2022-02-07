@@ -3,7 +3,6 @@ from faker import Faker
 
 
 class Students(models.Model):
-    objects = None
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     age = models.IntegerField()
