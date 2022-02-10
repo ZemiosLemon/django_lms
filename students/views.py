@@ -1,8 +1,7 @@
 from django.http import HttpResponse
-from faker import Faker
 from lms.utils import format_records
 from students.models import Students
-from webargs.djangoparser import use_kwargs
+from webargs.djangoparser import use_args
 from webargs import fields
 
 
@@ -10,18 +9,38 @@ def index(request):
     return HttpResponse('<h1>Hello!</h1>')
 
 
-@use_kwargs(
+@use_args(
     {
-        'count': fields.Integer(required=False, missing=10)
+        'first_name': fields.Str(required=False),
+        'last_name': fields.Str(required=False),
+        'age': fields.Int(required=False),
     },
     location='query'
 )
-def generate_students(request, count):
-    fake = Faker()
-    for _ in range(count):
-        stud = Students(first_name=fake.first_name(),
-                        last_name=fake.last_name(), age=fake.pyint(15, 75))
-        stud.save()
+def get_students(request, args):
     students = Students.objects.all()
-    result = format_records(students)
-    return HttpResponse(result)
+
+    for key, value in args.items():
+        if value:
+            students = students.filter(**{key: value})
+
+    html_form = """
+        <form method="get">
+            <label for="first_name">First name:</label>
+            <input type="text" id="first_name" name="first_name"></br></br>
+
+            <label for="last_name">Last name:</label>
+            <input type="text" id="last_name" name="last_name"></br></br>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age"></br></br>
+
+            <input type="submit" value="Submit">
+        </form>
+    """
+
+    records = format_records(students)
+
+    response = html_form + records
+
+    return HttpResponse(response)
