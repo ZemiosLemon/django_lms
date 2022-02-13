@@ -1,9 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from lms.utils import format_records
 from students.models import Students
 from webargs.djangoparser import use_args
 from webargs import fields
-
+from django.views.decorators.csrf import csrf_exempt
+from .forms import StudentsCreateForm
 
 def index(request):
     return HttpResponse('<h1>Hello!</h1>')
@@ -44,3 +45,25 @@ def get_students(request, args):
     response = html_form + records
 
     return HttpResponse(response)
+
+
+
+@csrf_exempt
+def create_student(request):
+    global form
+    if request.method == 'GET':
+        form = StudentsCreateForm()
+    elif request.method == 'POST':
+        form = StudentsCreateForm(data=request.POST)
+
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/students/')
+
+    html_form = f"""
+                <form method="post">
+                    {form.as_p()}
+                    <input type="submit" value="Submit">
+                </form>
+                """
+    return HttpResponse(html_form)
