@@ -22,7 +22,7 @@ def get_teachers(request, args):
 
     for key, value in args.items():
         if value:
-            students = students.filter(**{key: value})
+            teachers = teachers.filter(**{key: value})
 
     html_form = """
         <form method="get">
@@ -39,7 +39,7 @@ def get_teachers(request, args):
         </form>
     """
 
-    records = format_records(students)
+    records = format_records(teachers)
 
     response = html_form + records
 
