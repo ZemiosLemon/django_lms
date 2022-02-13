@@ -1,4 +1,7 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
+
+from groups import forms
 from lms.utils import format_records
 from webargs.djangoparser import use_args
 from webargs import fields
@@ -36,3 +39,24 @@ def get_group(request, args):
     response = html_form + records
 
     return HttpResponse(response)
+
+
+@csrf_exempt
+def create_group(request):
+    global form
+    if request.method == 'GET':
+        form = forms.GroupCreateForm()
+    elif request.method == 'POST':
+        form = forms.GroupCreateForm(data=request.POST)
+
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/group/')
+
+    html_form = f"""
+                <form method="post">
+                    {form.as_p()}
+                    <input type="submit" value="Submit">
+                </form>
+                """
+    return HttpResponse(html_form)

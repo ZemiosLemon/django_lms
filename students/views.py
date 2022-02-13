@@ -6,6 +6,7 @@ from webargs import fields
 from django.views.decorators.csrf import csrf_exempt
 from .forms import StudentsCreateForm
 
+
 def index(request):
     return HttpResponse('<h1>Hello!</h1>')
 
@@ -45,7 +46,6 @@ def get_students(request, args):
     response = html_form + records
 
     return HttpResponse(response)
-
 
 
 @csrf_exempt

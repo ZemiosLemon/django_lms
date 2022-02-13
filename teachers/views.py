@@ -2,7 +2,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 
 from lms.utils import format_records
-from students.models import Students
 from webargs.djangoparser import use_args
 from webargs import fields
 from teachers import forms
@@ -44,7 +43,6 @@ def get_teachers(request, args):
     response = html_form + records
 
     return HttpResponse(response)
-
 
 
 @csrf_exempt

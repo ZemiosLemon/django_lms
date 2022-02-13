@@ -1,15 +1,21 @@
 from django.db import models
 from faker import Faker
 
+from students.validators import unique_number
+
 
 class Students(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     age = models.IntegerField()
-    phone_number = models.CharField(max_length=20)
+    phone_number = models.CharField(
+        max_length=20,
+        validators=[unique_number],
+        default='1234567'
+    )
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name} - {self.age}'
+        return f'{self.first_name} {self.last_name} - {self.age} {self.phone_number}'
 
     @staticmethod
     def gen_students(count):
