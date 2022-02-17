@@ -1,8 +1,11 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
+
 from lms.utils import format_records
-from teachers.models import Teachers
 from webargs.djangoparser import use_args
 from webargs import fields
+from teachers import forms
+from teachers.models import Teachers
 
 
 @use_args(
@@ -40,3 +43,24 @@ def get_teachers(request, args):
     response = html_form + records
 
     return HttpResponse(response)
+
+
+@csrf_exempt
+def create_teacher(request):
+    global form
+    if request.method == 'GET':
+        form = forms.TeachersCreateForm()
+    elif request.method == 'POST':
+        form = forms.TeachersCreateForm(data=request.POST)
+
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/teachers/')
+
+    html_form = f"""
+                <form method="post">
+                    {form.as_p()}
+                    <input type="submit" value="Submit">
+                </form>
+                """
+    return HttpResponse(html_form)
