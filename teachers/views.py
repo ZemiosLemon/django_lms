@@ -1,12 +1,8 @@
 from django.http import HttpResponse
 from lms.utils import format_records
-from students.models import Students
+from teachers.models import Teachers
 from webargs.djangoparser import use_args
 from webargs import fields
-
-
-def index(request):
-    return HttpResponse('<h1>Hello!</h1>')
 
 
 @use_args(
@@ -17,20 +13,20 @@ def index(request):
     },
     location='query'
 )
-def get_students(request, args):
-    students = Students.objects.all()
+def get_teachers(request, args):
+    teachers = Teachers.objects.all()
 
     for key, value in args.items():
         if value:
-            students = students.filter(**{key: value})
+            teachers = teachers.filter(**{key: value})
 
     html_form = """
         <form method="get">
             <label for="first_name">First name:</label>
-            <input type="text" id="first_name" name="first_name"></br></br>
+            <input type="text" id="fname" name="first_name"></br></br>
 
             <label for="last_name">Last name:</label>
-            <input type="text" id="last_name" name="last_name"></br></br>
+            <input type="text" id="lname" name="last_name"></br></br>
 
             <label for="age">Age:</label>
             <input type="number" id="age" name="age"></br></br>
@@ -39,7 +35,7 @@ def get_students(request, args):
         </form>
     """
 
-    records = format_records(students)
+    records = format_records(teachers)
 
     response = html_form + records
 
