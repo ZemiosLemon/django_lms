@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from lms.utils import format_records
+from django.shortcuts import render
 from students.models import Students
 from webargs.djangoparser import use_args
 from webargs import fields
@@ -8,7 +8,10 @@ from .forms import StudentsCreateForm
 
 
 def index(request):
-    return HttpResponse('<h1>Hello!</h1>')
+    return render(
+        request=request,
+        template_name='students/index.html'
+    )
 
 
 @use_args(
@@ -26,26 +29,32 @@ def get_students(request, args):
         if value:
             students = students.filter(**{key: value})
 
-    html_form = """
-        <form method="get">
-            <label for="first_name">First name:</label>
-            <input type="text" id="first_name" name="first_name"></br></br>
+    # html_form = """
+    #     <form method="get">
+    #         <label for="first_name">First name:</label>
+    #         <input type="text" id="first_name" name="first_name"></br></br>
+    #
+    #         <label for="last_name">Last name:</label>
+    #         <input type="text" id="last_name" name="last_name"></br></br>
+    #
+    #         <label for="age">Age:</label>
+    #         <input type="number" id="age" name="age"></br></br>
+    #
+    #         <input type="submit" value="Submit">
+    #     </form>
+    # """
+    #
+    # records = format_records(students)
+    #
+    # response = html_form + records
+    #
+    # return HttpResponse(response)
 
-            <label for="last_name">Last name:</label>
-            <input type="text" id="last_name" name="last_name"></br></br>
-
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age"></br></br>
-
-            <input type="submit" value="Submit">
-        </form>
-    """
-
-    records = format_records(students)
-
-    response = html_form + records
-
-    return HttpResponse(response)
+    return render(
+        request=request,
+        template_name='students/list.html',
+        context={'students': students}
+    )
 
 
 @csrf_exempt
@@ -67,3 +76,21 @@ def create_student(request):
                 </form>
                 """
     return HttpResponse(html_form)
+
+
+def update_student(request, pk):
+    student = Students.objects.get(id=pk)
+    if request.method == 'GET':
+        form = StudentsCreateForm(instance=student)
+    elif request.method == 'POST':
+        form = StudentsCreateForm(data=request.POST, instance=student)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/students/')
+
+    return render(
+        request=request,
+        template_name='students/update.html',
+        context={'form': form}
+    )

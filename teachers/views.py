@@ -1,10 +1,9 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views.decorators.csrf import csrf_exempt
-
-from lms.utils import format_records
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from webargs.djangoparser import use_args
 from webargs import fields
 from teachers import forms
+from teachers.forms import TeachersCreateForm
 from teachers.models import Teachers
 
 
@@ -23,29 +22,14 @@ def get_teachers(request, args):
         if value:
             teachers = teachers.filter(**{key: value})
 
-    html_form = """
-        <form method="get">
-            <label for="first_name">First name:</label>
-            <input type="text" id="fname" name="first_name"></br></br>
-
-            <label for="last_name">Last name:</label>
-            <input type="text" id="lname" name="last_name"></br></br>
-
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age"></br></br>
-
-            <input type="submit" value="Submit">
-        </form>
-    """
-
-    records = format_records(teachers)
-
-    response = html_form + records
-
-    return HttpResponse(response)
+    return render(
+        request=request,
+        template_name='teachers/list.html',
+        context={'teachers': teachers}
+    )
 
 
-@csrf_exempt
+# @csrf_exempt
 def create_teacher(request):
     global form
     if request.method == 'GET':
@@ -57,10 +41,26 @@ def create_teacher(request):
         form.save()
         return HttpResponseRedirect('/teachers/')
 
-    html_form = f"""
-                <form method="post">
-                    {form.as_p()}
-                    <input type="submit" value="Submit">
-                </form>
-                """
-    return HttpResponse(html_form)
+    return render(
+        request=request,
+        template_name='teachers/create.html',
+        context={'form': form}
+    )
+
+
+def update_teacher(request, pk):
+    teacher = Teachers.objects.get(id=pk)
+    if request.method == 'GET':
+        form = TeachersCreateForm(instance=teacher)
+    elif request.method == 'POST':
+        form = TeachersCreateForm(data=request.POST, instance=teacher)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/teachers/')
+
+    return render(
+        request=request,
+        template_name='teachers/update.html',
+        context={'form': form}
+    )
