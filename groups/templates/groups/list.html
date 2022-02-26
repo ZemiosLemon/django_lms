@@ -1,0 +1,19 @@
+{% extends 'groups/base.html' %}
+
+{% block title %}
+    Groups list
+{% endblock %}
+
+{% block content %}
+    <form method="get">
+            <label for="name_group">Group name:</label>
+            <input type="text" id="name_group" name="name_group"><br><br>
+            <label for="size_group">Size group:</label>
+            <input type="number" id="size_group" name="size_group"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+
+    {% for group in groups %}
+        <a href="update/{{group.id}}/">Edit</a>&nbsp;&nbsp;{{ group }}<br>
+    {% endfor %}
+{% endblock %}
