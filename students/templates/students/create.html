@@ -1,4 +1,4 @@
-{% extends 'students/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}
     Create student
@@ -9,5 +9,7 @@
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Create">
+        <a href="{% url 'students:list' %}">Cancel</a>
+
     </form>
 {% endblock %}

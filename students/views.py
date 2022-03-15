@@ -1,17 +1,13 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
+
 from students.models import Students
 from webargs.djangoparser import use_args
 from webargs import fields
 from django.views.decorators.csrf import csrf_exempt
 from .forms import StudentsCreateForm
-
-
-def index(request):
-    return render(
-        request=request,
-        template_name='students/index.html'
-    )
 
 
 @use_args(
@@ -28,27 +24,6 @@ def get_students(request, args):
     for key, value in args.items():
         if value:
             students = students.filter(**{key: value})
-
-    # html_form = """
-    #     <form method="get">
-    #         <label for="first_name">First name:</label>
-    #         <input type="text" id="first_name" name="first_name"></br></br>
-    #
-    #         <label for="last_name">Last name:</label>
-    #         <input type="text" id="last_name" name="last_name"></br></br>
-    #
-    #         <label for="age">Age:</label>
-    #         <input type="number" id="age" name="age"></br></br>
-    #
-    #         <input type="submit" value="Submit">
-    #     </form>
-    # """
-    #
-    # records = format_records(students)
-    #
-    # response = html_form + records
-    #
-    # return HttpResponse(response)
 
     return render(
         request=request,
@@ -67,17 +42,12 @@ def create_student(request):
 
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/students/')
+        return HttpResponseRedirect(reverse('students:list'))
 
-    html_form = f"""
-                <form method="post">
-                    {form.as_p()}
-                    <input type="submit" value="Submit">
-                </form>
-                """
-    return HttpResponse(html_form)
+    return render(request, 'students/create.html', {'form': form})
 
 
+@csrf_exempt
 def update_student(request, pk):
     student = Students.objects.get(id=pk)
     if request.method == 'GET':
@@ -87,10 +57,20 @@ def update_student(request, pk):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/students/')
+            return HttpResponseRedirect(reverse('students:list'))
 
     return render(
         request=request,
         template_name='students/update.html',
         context={'form': form}
     )
+
+
+@csrf_exempt
+def delete_students(request, pk):
+    student = get_object_or_404(Students, id=pk)
+    if request.method == 'POST':
+        student.delete()
+        return HttpResponseRedirect(reverse('students:list'))
+
+    return render(request, 'students/delete.html', {'student': student})
