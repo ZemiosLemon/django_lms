@@ -71,6 +71,6 @@ def delete_teacher(request, pk):
     teacher = get_object_or_404(Teachers, id=pk)
     if request.method == 'POST':
         teacher.delete()
-        return HttpResponseRedirect(reverse('students:list'))
+        return HttpResponseRedirect(reverse('teachers:list'))
 
     return render(request, 'teachers/delete.html', {'teacher': teacher})
