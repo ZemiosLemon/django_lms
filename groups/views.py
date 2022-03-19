@@ -1,5 +1,7 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
+
 from groups import forms
 from groups.forms import GroupCreateForm
 from webargs.djangoparser import use_args
@@ -37,7 +39,7 @@ def create_groups(request):
 
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/groups/')
+        return HttpResponseRedirect(reverse('groups:list'))
 
     return render(
         request=request,
@@ -55,10 +57,19 @@ def update_groups(request, pk):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/groups')
+            return HttpResponseRedirect(reverse('groups:list'))
 
     return render(
         request=request,
         template_name='groups/update.html',
         context={'form': form}
     )
+
+
+def delete_groups(request, pk):
+    group = get_object_or_404(Group, id=pk)
+    if request.method == 'POST':
+        group.delete()
+        return HttpResponseRedirect(reverse('groups:list'))
+
+    return render(request, 'groups/delete.html', {'group': group})

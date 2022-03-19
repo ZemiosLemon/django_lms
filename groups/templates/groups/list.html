@@ -1,19 +1,56 @@
-{% extends 'groups/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}
     Groups list
 {% endblock %}
 
+{% block custom_css %}
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+{% endblock %}
+
 {% block content %}
     <form method="get">
-            <label for="name_group">Group name:</label>
-            <input type="text" id="name_group" name="name_group"><br><br>
-            <label for="size_group">Size group:</label>
-            <input type="number" id="size_group" name="size_group"><br><br>
-            <input type="submit" value="Submit">
-        </form>
+        <label for="name_group">Group name:</label>
+        <input type="text" id="name_group" name="name_group"><br><br>
+
+        <label for="size_group">Size group:</label>
+        <input type="number" id="size_group" name="size_group"><br><br>
+
+        <input type="submit" value="Search">
+    </form>
+    <p><strong>Count of groups: {{ groups.count }}</strong></p>
+    <table>
+        <tr>
+            <th></th>
+            <th>Name group</th>
+            <th>Size group</th>
+            <th>🖉</th>
+            <th>🗑</th>
+        </tr>
 
     {% for group in groups %}
-        <a href="update/{{group.id}}/">Edit</a>&nbsp;&nbsp;{{ group }}<br>
+        <tr>
+            <th>{{ forloop.counter }}</th>
+            <th>{{ group.name_group }}</th>
+            <th>{{ group.size_group }}</th>
+            <th><a href="{% url 'groups:update' group.id %}">Edit</a></th>
+            <th><a href="{% url 'groups:delete' group.id %}">Delete</a></th>
+        </tr>
+
     {% endfor %}
+    </table>
 {% endblock %}

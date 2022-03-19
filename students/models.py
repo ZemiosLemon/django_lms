@@ -1,7 +1,7 @@
 from django.db import models
 from faker import Faker
 
-from students.validators import unique_number
+from core.validators import unique_number
 
 
 class Students(models.Model):
