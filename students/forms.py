@@ -1,4 +1,5 @@
 from django import forms
+from django_filters import FilterSet
 
 from .models import Students
 
@@ -9,9 +10,12 @@ class StudentsCreateForm(forms.ModelForm):
         fields = [
             'first_name',
             'last_name',
-            'age',
+            'birthday',
             'phone_number',
         ]
+        widgets = {
+            'birthday': forms.DateInput(attrs={'type': 'date'})
+        }
 
     @staticmethod
     def normalize_name(value):
@@ -32,3 +36,13 @@ class StudentsCreateForm(forms.ModelForm):
             if char.isdigit():
                 norm_number += char
         return norm_number
+
+
+class StudentsFilter(FilterSet):
+    class Meta:
+        model = Students
+        fields = {
+            'age': ['lt', 'gt'],
+            'first_name': ['exact', 'icontains'],
+            'last_name': ['exact', 'startswith']
+        }

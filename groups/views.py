@@ -1,9 +1,11 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 
 from groups import forms
 from groups.forms import GroupCreateForm
+from groups.forms import GroupsFilter
 from webargs.djangoparser import use_args
 from webargs import fields
 from groups.models import Group
@@ -22,14 +24,19 @@ def get_group(request, args):
     for key, value in args.items():
         if value:
             groups = groups.filter(**{key: value})
+
+    filter_groups = GroupsFilter(data=request.GET, queryset=groups)
+
     return render(
             request=request,
             template_name='groups/list.html',
-            context={'groups': groups}
+            context={
+                'groups': groups,
+                'filter_groups': filter_groups
+            }
         )
 
 
-# @csrf_exempt
 def create_groups(request):
     global form
     if request.method == 'GET':

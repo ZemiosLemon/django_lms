@@ -6,8 +6,9 @@ from django.urls import reverse
 from students.models import Students
 from webargs.djangoparser import use_args
 from webargs import fields
-from django.views.decorators.csrf import csrf_exempt
+
 from .forms import StudentsCreateForm
+from .forms import StudentsFilter
 
 
 @use_args(
@@ -25,14 +26,18 @@ def get_students(request, args):
         if value:
             students = students.filter(**{key: value})
 
+    filter_students = StudentsFilter(data=request.GET, queryset=students)
+
     return render(
         request=request,
         template_name='students/list.html',
-        context={'students': students}
+        context={
+            'students': students,
+            'filter_students': filter_students,
+        }
     )
 
 
-@csrf_exempt
 def create_student(request):
     global form
     if request.method == 'GET':
@@ -47,7 +52,6 @@ def create_student(request):
     return render(request, 'students/create.html', {'form': form})
 
 
-@csrf_exempt
 def update_student(request, pk):
     student = Students.objects.get(id=pk)
     if request.method == 'GET':
@@ -66,7 +70,6 @@ def update_student(request, pk):
     )
 
 
-@csrf_exempt
 def delete_students(request, pk):
     student = get_object_or_404(Students, id=pk)
     if request.method == 'POST':
