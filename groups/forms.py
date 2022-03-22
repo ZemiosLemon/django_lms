@@ -10,6 +10,7 @@ class GroupCreateForm(forms.ModelForm):
         fields = [
             'name_group',
             'size_group',
+
         ]
 
 

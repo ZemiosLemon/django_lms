@@ -13,33 +13,7 @@
 
     {% include 'students/includes/accordion.html' %}
     <p><strong>Count of students: {{ filter_students.qs.count }}</strong></p>
-    <table class="table table-success table-striped">
-        <tr>
-            <th></th>
-            <th>First name</th>
-            <th>Last name</th>
-            <th>Age</th>
-            <th>Enroll date</th>
-            <th>Graduate date</th>
-            <th>Phone number</th>
-            <th><i class="bi bi-pencil"></i></th>
-            <th><i class="bi bi-trash3"></i></th>
-        </tr>
-
-
-
-    {% for student in filter_students.qs %}
-        <tr>
-            <th>{{ forloop.counter }}</th>
-            <th>{{ student.first_name }}</th>
-            <th>{{ student.last_name }}</th>
-            <th>{{ student.age }}</th>
-            <th>{{ student.enroll_date }}</th>
-            <th>{{ student.graduate_date }}</th>
-            <th>{{ student.phone_number }}</th>
-            <th><a class="btn btn-info" href="{% url 'students:update' student.id %}">Edit</a></th>
-            <th><a class="btn btn-warning" href="{% url 'students:delete' student.id %}">Delete</a></th>
-        </tr>
-    {% endfor %}
-    </table>
+    {% with list_object=filter_students.qs %}
+        {% include 'includes/students_list_table.html' %}
+    {% endwith %}
 {% endblock %}

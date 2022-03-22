@@ -11,29 +11,8 @@
         {% include 'teachers/includes/accordion.html' %}
 
     <p><strong>Count of teachers: {{ teachers.count }}</strong></p>
-    <table class="table table-success table-striped">
-        <tr>
-            <th></th>
-            <th>First name</th>
-            <th>Last name</th>
-            <th>Age</th>
-            <th><i class="bi bi-telephone"> Phone number</i></th>
-            <th><i class="bi bi-pencil"></i></th>
-            <th><i class="bi bi-trash3"></i></th>
-        </tr>
 
-    {% for teacher in teachers %}
-        <tr>
-            <th>{{ forloop.counter }}</th>
-            <th>{{ teacher.first_name }}</th>
-            <th>{{ teacher.last_name }}</th>
-            <th>{{ teacher.age }}</th>
-            <th>{{ teacher.phone_number }}</th>
-            <th><a class="btn btn-info" href="{% url 'teachers:update' teacher.id %}">Edit</a></th>
-            <th><a class="btn btn-warning" href="{% url 'teachers:delete' teacher.id %}">Delete</a></th>
-        </tr>
-        &nbsp;&nbsp;
-        &nbsp;&nbsp;
-    {% endfor %}
-    </table>
+    {% with list_object=filter_teachers.qs %}
+        {% include 'includes/teachers_list_table.html' %}
+    {% endwith %}
 {% endblock %}

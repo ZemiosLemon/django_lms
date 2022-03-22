@@ -1,5 +1,7 @@
 from django.db import models
 from faker import Faker
+
+from groups.models import Group
 from .validators import unique_number
 
 
@@ -10,6 +12,12 @@ class Teachers(models.Model):
     phone_number = models.CharField(
         max_length=20,
         validators=[unique_number]
+    )
+    group = models.ForeignKey(
+        Group,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='teachers'
     )
 
     def __str__(self):
