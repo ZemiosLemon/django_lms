@@ -1,4 +1,5 @@
 from django import forms
+from django_filters import FilterSet
 
 from .models import Teachers
 
@@ -32,3 +33,13 @@ class TeachersCreateForm(forms.ModelForm):
             if char.isdigit():
                 norm_number += char
         return norm_number
+
+
+class TeachersFilter(FilterSet):
+    class Meta:
+        model = Teachers
+        fields = {
+            'age': ['lt', 'gt'],
+            'first_name': ['exact', 'icontains'],
+            'last_name': ['exact', 'startswith']
+        }

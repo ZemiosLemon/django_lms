@@ -1,50 +1,25 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}
     Teachers list
 {% endblock %}
 
-{% block custom_css %}
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-{% endblock %}
 
 {% block content %}
-    <form method="get">
-        <label for="first_name">First name:</label>
-        <input type="text" id="first_name" name="first_name"><br><br>
+        {% include 'teachers/includes/accordion.html' %}
 
-        <label for="last_name">Last name:</label>
-        <input type="text" id="last_name" name="last_name"><br><br>
-
-        <label for="age">Age:</label>
-        <input type="number" id="age" name="age"><br><br>
-
-        <input type="submit" value="Search">
-    </form>
     <p><strong>Count of teachers: {{ teachers.count }}</strong></p>
-    <table>
+    <table class="table table-success table-striped">
         <tr>
             <th></th>
             <th>First name</th>
             <th>Last name</th>
             <th>Age</th>
-            <th>Phone number</th>
-            <th>🖉</th>
-            <th>🗑</th>
+            <th><i class="bi bi-telephone"> Phone number</i></th>
+            <th><i class="bi bi-pencil"></i></th>
+            <th><i class="bi bi-trash3"></i></th>
         </tr>
 
     {% for teacher in teachers %}
@@ -54,8 +29,8 @@ tr:nth-child(even) {
             <th>{{ teacher.last_name }}</th>
             <th>{{ teacher.age }}</th>
             <th>{{ teacher.phone_number }}</th>
-            <th><a href="{% url 'teachers:update' teacher.id %}">Edit</a></th>
-            <th><a href="{% url 'teachers:delete' teacher.id %}">Delete</a></th>
+            <th><a class="btn btn-info" href="{% url 'teachers:update' teacher.id %}">Edit</a></th>
+            <th><a class="btn btn-warning" href="{% url 'teachers:delete' teacher.id %}">Delete</a></th>
         </tr>
         &nbsp;&nbsp;
         &nbsp;&nbsp;

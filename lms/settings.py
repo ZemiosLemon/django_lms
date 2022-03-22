@@ -42,6 +42,10 @@ INSTALLED_APPS = [
     'groups.apps.GroupsConfig',
     'teachers.apps.TeachersConfig',
     'django_extensions',
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'django_filters',
+
 ]
 
 MIDDLEWARE = [
@@ -114,6 +118,8 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
+USE_L10N = False
+
 USE_TZ = True
 
 
@@ -126,3 +132,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+DATE_FORMAT = 'd-M-Y'

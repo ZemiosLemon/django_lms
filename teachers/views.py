@@ -1,10 +1,12 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from webargs.djangoparser import use_args
 from webargs import fields
 from teachers import forms
 from teachers.forms import TeachersCreateForm
+from teachers.forms import TeachersFilter
 from teachers.models import Teachers
 
 
@@ -23,14 +25,18 @@ def get_teachers(request, args):
         if value:
             teachers = teachers.filter(**{key: value})
 
+    filter_teachers = TeachersFilter(data=request.GET, queryset=teachers)
+
     return render(
         request=request,
         template_name='teachers/list.html',
-        context={'teachers': teachers}
+        context={
+            'teachers': teachers,
+            'filter_teachers': filter_teachers
+                 }
     )
 
 
-# @csrf_exempt
 def create_teacher(request):
     global form
     if request.method == 'GET':
