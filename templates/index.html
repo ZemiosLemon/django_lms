@@ -1,0 +1,19 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+    Homepage
+{% endblock %}
+
+{% block pages %}
+    <td><a href="{% url 'students:list' %}">List students</a></td>
+    <td><a href="{% url 'students:create' %}">Create student</a></td>
+    <td><a href="{% url 'groups:list' %}">List groups</a></td>
+    <td><a href="{% url 'groups:create' %}">Create group</a></td>
+    <td><a href="{% url 'teachers:list' %}">List teachers</a></td>
+    <td><a href="{% url 'teachers:create' %}">Create teachers</a></td>
+{% endblock %}
+
+{% block content %}
+    <h1>Welcome to LMS</h1>
+{% endblock %}

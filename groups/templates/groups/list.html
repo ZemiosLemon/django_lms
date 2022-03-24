@@ -23,7 +23,7 @@
         <tr>
             <th>{{ forloop.counter }}</th>
             <th>{{ group.name_group }}</th>
-            <th>{{ group.size_group }}</th>
+            <th>{{ group.students.count }}</th>
             <th><a class="btn btn-info" href="{% url 'groups:update' group.id %}">Edit</a></th>
             <th><a class="btn btn-warning" href="{% url 'groups:delete' group.id %}">Delete</a></th>
         </tr>
