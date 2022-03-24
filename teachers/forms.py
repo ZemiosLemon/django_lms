@@ -12,6 +12,7 @@ class TeachersCreateForm(forms.ModelForm):
             'last_name',
             'age',
             'phone_number',
+            'group'
         ]
 
     @staticmethod
@@ -41,5 +42,6 @@ class TeachersFilter(FilterSet):
         fields = {
             'age': ['lt', 'gt'],
             'first_name': ['exact', 'icontains'],
-            'last_name': ['exact', 'startswith']
+            'last_name': ['exact', 'startswith'],
+
         }

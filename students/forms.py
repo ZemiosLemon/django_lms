@@ -10,8 +10,11 @@ class StudentsCreateForm(forms.ModelForm):
         fields = [
             'first_name',
             'last_name',
-            'birthday',
+            # 'birthday',
             'phone_number',
+            'group',
+            'age'
+
         ]
         widgets = {
             'birthday': forms.DateInput(attrs={'type': 'date'})

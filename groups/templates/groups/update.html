@@ -10,7 +10,20 @@
     <form method="post">
         {% csrf_token %}
         {{ form | crispy}}
+
         <input class="btn btn-outline-success" type="submit" value="Update">
         <a class="btn btn-outline-danger" href="{% url 'groups:list' %}">Cancel</a>
     </form>
+
+    <p align="center"><font size="6">Teachers</font></p>
+
+    {% with list_object=group.teachers.all %}
+        {% include 'includes/teachers_list_table.html' %}
+    {% endwith %}
+
+    <p align="center"><font size="6">Students</font></p>
+
+    {% with list_object=group.students.all %}
+        {% include 'includes/students_list_table.html' %}
+    {% endwith %}
 {% endblock %}
